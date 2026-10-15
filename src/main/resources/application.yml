@@ -1,0 +1,40 @@
+server:
+  port: 18081
+
+spring:
+  application:
+    name: DocuAgent
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/docuagent?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: ${DB_PASSWORD:1234}
+  ai:
+    openai:
+      api-key: ${AI_API_KEY}
+      base-url: https://api.siliconflow.cn
+      chat:
+        options:
+          model: Qwen/Qwen3-8B
+      embedding:
+        options:
+          model: BAAI/bge-m3
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # SQL 日志走日志框架，可按级别开关（排查 SQL 时把 mapper 包调成 debug）
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  level:
+    com.docuagent: DEBUG
+    com.docuagent.docuagent.mapper: warn
+    org.springframework.ai: DEBUG
+    org.apache.ibatis: warn
+    com.zaxxer.hikari: warn
