@@ -19,6 +19,11 @@ spring:
       embedding:
         options:
           model: BAAI/bge-m3
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
 
 mybatis-plus:
   configuration:
@@ -27,14 +32,31 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   global-config:
     db-config:
+      # ⚠️ 必须显式配 auto！MP 默认是雪花算法（ASSIGN_ID），
+      # 会往 AUTO_INCREMENT 列里塞 19 位大数，把自增 ID 顶掉
+      id-type: auto
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
 
+# ============ 日志配置 ============
 logging:
   level:
+    root: info
+    # 自己的代码：想看更细的流程就改成 debug
     com.docuagent: DEBUG
+    # MyBatis 的 SQL 日志（logger 名 = Mapper 接口全限定名）；排查 SQL 时改成 debug
     com.docuagent.docuagent.mapper: warn
-    org.springframework.ai: DEBUG
+    # 框架噪音统一压到 warn，只在真出问题时才出声
+    org.springframework.ai: warn
+    com.baomidou: warn
     org.apache.ibatis: warn
     com.zaxxer.hikari: warn
+    org.springframework.web: warn
+  pattern:
+    # 比默认格式精简：去掉进程号，时间只留时分秒，logger 名截短
+    console: "%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
+  file:
+    # 日志同时落到文件（放 target/ 下，自动被 .gitignore 忽略）
+    # 好处：出问题时直接翻文件，不用盯着控制台，也方便事后排查
+    name: target/logs/docuagent.log

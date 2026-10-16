@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS document (
     status         VARCHAR(20)   NOT NULL DEFAULT 'UPLOADED'
                    COMMENT '状态：UPLOADED 已上传 / PARSING 解析中 / INDEXING 向量化中 / DONE 完成 / FAILED 失败',
     failure_reason VARCHAR(1000)                         COMMENT '失败原因（仅 FAILED 时有值）',
+    char_count     INT                                   COMMENT '提取出的字符数（解析成功后填）',
     create_time    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     deleted        TINYINT       NOT NULL DEFAULT 0      COMMENT '逻辑删除：0未删 1已删',

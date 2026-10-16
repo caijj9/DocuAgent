@@ -45,6 +45,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-tika-document-reader</artifactId>
+            <!-- 不写版本，BOM 管 -->
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

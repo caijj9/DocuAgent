@@ -57,6 +57,7 @@ erDiagram
 | `file_size` | BIGINT | 文件大小（字节）|
 | `status` | VARCHAR(20) | UPLOADED / PARSING / INDEXING / DONE / FAILED |
 | `failure_reason` | VARCHAR(1000) | 失败原因（仅 FAILED 时有值）|
+| `char_count` | INT | 提取出的字符数（解析成功后填）|
 | `create_time` / `update_time` | DATETIME | |
 | `deleted` | TINYINT | 逻辑删除 |
 
