@@ -1,8 +1,11 @@
 package com.docuagent.docuagent.service.impl;
 
+import com.docuagent.docuagent.ai.chunk.SimpleChunker;
 import com.docuagent.docuagent.common.CodeEnum;
+import com.docuagent.docuagent.entity.Chunk;
 import com.docuagent.docuagent.entity.Document;
 import com.docuagent.docuagent.exception.BizException;
+import com.docuagent.docuagent.mapper.ChunkMapper;
 import com.docuagent.docuagent.mapper.DocumentMapper;
 import com.docuagent.docuagent.service.DocumentService;
 import com.docuagent.docuagent.vo.DocumentUploadVO;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,6 +30,11 @@ public class DocumentServiceImpl implements DocumentService {
             Set.of("pdf", "ppt", "pptx", "doc", "docx");
     @Autowired
     private DocumentMapper documentMapper;
+    @Autowired
+    private ChunkMapper chunkMapper;
+    @Autowired
+    private SimpleChunker simpleChunker;
+
     @Override
     public DocumentUploadVO uploadDocument(Long courseId, MultipartFile file) throws IOException {
         Document document = new Document();
@@ -83,7 +92,16 @@ public class DocumentServiceImpl implements DocumentService {
             text = "解析失败：" + e.getMessage();      // 失败时也给前端一句能看的话
         }
 
-        documentMapper.insert(document);              // ← 先落库，数据库生成的 id 才会回填
+        documentMapper.insert(document);// ← 先落库，数据库生成的 id 才会回填
+        List<String> chunks = simpleChunker.split(text);
+        for (int idx = 0; idx < chunks.size(); idx++) {
+            Chunk c = new Chunk();
+            c.setDocumentId(document.getId());
+            c.setChunkIndex(idx);
+            c.setContent(chunks.get(idx));
+            c.setCharCount(chunks.get(idx).length());
+            chunkMapper.insert(c);
+        }
         documentUploadVO.setId(document.getId());
         documentUploadVO.setOriginalName(document.getOriginalName());
         documentUploadVO.setCharCount(document.getCharCount());
