@@ -1,5 +1,6 @@
 package com.docuagent.docuagent.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.docuagent.docuagent.ai.chunk.SimpleChunker;
 import com.docuagent.docuagent.common.CodeEnum;
 import com.docuagent.docuagent.entity.Chunk;
@@ -11,16 +12,16 @@ import com.docuagent.docuagent.service.DocumentService;
 import com.docuagent.docuagent.vo.DocumentUploadVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
+import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,9 +35,25 @@ public class DocumentServiceImpl implements DocumentService {
     private ChunkMapper chunkMapper;
     @Autowired
     private SimpleChunker simpleChunker;
+    @Autowired
+    private SimpleVectorStore vectorStore;
+    @Value("${docuagent.vector-store.path:data/vector-store.json}")
+    private String storePath;
 
     @Override
     public DocumentUploadVO uploadDocument(Long courseId, MultipartFile file) throws IOException {
+
+        // 同一课程下同名文件视为重复上传，直接拦住。
+        // 否则会多出一条 document + 一整批 chunk + 一整批向量，
+        // 检索时同一内容会占掉多个 Top-K 名额（还容易让人误以为是相似度算错了）
+        Long dup = documentMapper.selectCount(
+                new LambdaQueryWrapper<Document>()
+                        .eq(Document::getCourseId, courseId)
+                        .eq(Document::getOriginalName, file.getOriginalFilename()));
+        if (dup > 0) {
+            throw new BizException(CodeEnum.DOCUMENT_ALREADY_EXISTS);
+        }
+
         Document document = new Document();
         document.setCourseId(courseId);
         document.setOriginalName(file.getOriginalFilename());
@@ -93,14 +110,41 @@ public class DocumentServiceImpl implements DocumentService {
         }
 
         documentMapper.insert(document);// ← 先落库，数据库生成的 id 才会回填
-        List<String> chunks = simpleChunker.split(text);
-        for (int idx = 0; idx < chunks.size(); idx++) {
-            Chunk c = new Chunk();
-            c.setDocumentId(document.getId());
-            c.setChunkIndex(idx);
-            c.setContent(chunks.get(idx));
-            c.setCharCount(chunks.get(idx).length());
-            chunkMapper.insert(c);
+        if ("DONE".equals(document.getStatus())) {
+
+            List<String> chunks = simpleChunker.split(text);
+
+            List<Chunk> chunkList = new ArrayList<>();
+
+            for (int idx = 0; idx < chunks.size(); idx++) {
+                Chunk c = new Chunk();
+                c.setDocumentId(document.getId());
+                c.setChunkIndex(idx);
+                c.setContent(chunks.get(idx));
+                c.setCharCount(chunks.get(idx).length());
+                chunkMapper.insert(c);                          // ← 插完 c.getId() 才有值
+                chunkList.add(c);                               // ← ② 收集（此时 id 已回填）
+            }
+
+            // ⚠️ 这里的 Document 必须是 Spring AI 的！
+            //    本文件第 6 行 import 的 Document 是你自己的实体，两者同名 →
+            //    只能写全限定名
+            List<org.springframework.ai.document.Document> aiDocs = new ArrayList<>();
+
+            for (Chunk c : chunkList) {
+                Map<String, Object> meta = Map.of(
+                        "courseId",   courseId,
+                        "documentId", document.getId(),
+                        "chunkId",    c.getId()
+                );
+                aiDocs.add(new org.springframework.ai.document.Document(
+                        String.valueOf(c.getId()), c.getContent(), meta));
+            }
+
+            vectorStore.add(aiDocs);                      // 批量算向量 + 进内存库
+            vectorStore.save(new File(storePath));        // 落盘，不 save 重启就没了
+
+            log.info("向量入库完成：{} 块", aiDocs.size());
         }
         documentUploadVO.setId(document.getId());
         documentUploadVO.setOriginalName(document.getOriginalName());

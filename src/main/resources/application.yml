@@ -28,8 +28,10 @@ spring:
 # ============ 业务配置 ============
 docuagent:
   chunk:
-    size: 800            # 每块的字符数上限
-    overlap: 150         # 相邻块的重叠字符数（必须小于 size）
+    size: 500            # 每块的字符数上限
+    overlap: 100         # 相邻块的重叠字符数（必须小于 size）
+  vector-store:
+    path: data/vector-store.json
 
 mybatis-plus:
   configuration:

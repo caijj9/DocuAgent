@@ -51,6 +51,12 @@
             <!-- 不写版本，BOM 管 -->
         </dependency>
 
+        <!-- 内置向量库 SimpleVectorStore：零安装，落盘就是一个 JSON 文件 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-vector-store</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
