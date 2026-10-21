@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.validation.BindException;                        // ← 改
 import org.springframework.web.servlet.resource.NoResourceFoundException;   // ← 改
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import jakarta.validation.ConstraintViolationException;
 
 
 @Slf4j
@@ -42,6 +44,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public Result<Void> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
         return new Result<>(400, "参数类型错误：" + e.getName(), null);
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class, ConstraintViolationException.class})
+    public Result<Void> handleInvalidRequest(Exception e) {
+        return new Result<>(400, "请求JSON格式、字段类型或参数范围不正确", null);
     }
 
     /** 路径不存在 → 404（不是 500） */

@@ -27,7 +27,7 @@ erDiagram
 | 2 | `document` | 课件 | 11 |
 | 3 | `chunk` | 分块（检索的最小单位）| 8 |
 | 4 | `question` | 题目 | 11 |
-| 5 | `answer_record` | 答题记录 | 12 |
+| 5 | `answer_record` | 答题记录 | 14 |
 | 6 | `wrong_question` | 错题本 | 9 |
 
 ---
@@ -144,3 +144,7 @@ erDiagram
 - `deleted` 配合 MyBatis-Plus 全局逻辑删除（`logic-delete-field: deleted`）—— **代码里 `delete()` 会自动变成 UPDATE**
 - 主键统一 `BIGINT AUTO_INCREMENT`
 - 字段命名用**下划线**，Java 侧靠 `map-underscore-to-camel-case` 自动映射
+
+## 段2补充：批改结果重放
+
+answer_record 新增 hit_points / missed_points（TEXT，可空，保存JSON字符串）；用来在 request_id 重试时返回原来的逐项批改结果。现有数据库由 scripts/migrate-stage2.cjs 在备份后补列；sql/init.sql 的 CREATE TABLE 已同步。

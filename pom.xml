@@ -39,6 +39,14 @@
 
     <!-- ④ dependencies：两个 starter 改名 + 加 Spring AI -->
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
         <!-- 放在 dependencies 里，挨着 spring-boot-starter-test 上面就行 -->
         <dependency>
             <groupId>org.projectlombok</groupId>

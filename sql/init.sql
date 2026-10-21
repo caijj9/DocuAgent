@@ -104,6 +104,8 @@ CREATE TABLE IF NOT EXISTS answer_record (
     comment     VARCHAR(1000)                         COMMENT '批改评语',
     duration_ms INT                                   COMMENT '答题耗时（毫秒）',
     request_id  VARCHAR(64)                           COMMENT '请求ID（幂等去重用）',
+    hit_points  TEXT                                  COMMENT '命中评分要点（JSON数组）',
+    missed_points TEXT                                COMMENT '遗漏评分要点（JSON数组）',
     create_time DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     deleted     TINYINT       NOT NULL DEFAULT 0      COMMENT '逻辑删除：0未删 1已删',
