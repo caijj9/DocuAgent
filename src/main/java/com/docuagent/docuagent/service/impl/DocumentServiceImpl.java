@@ -8,6 +8,7 @@ import com.docuagent.docuagent.entity.Document;
 import com.docuagent.docuagent.exception.BizException;
 import com.docuagent.docuagent.mapper.ChunkMapper;
 import com.docuagent.docuagent.mapper.DocumentMapper;
+import com.docuagent.docuagent.mapper.CourseMapper;
 import com.docuagent.docuagent.service.DocumentService;
 import com.docuagent.docuagent.vo.DocumentUploadVO;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private DocumentMapper documentMapper;
     @Autowired
+    private CourseMapper courseMapper;
+    @Autowired
     private ChunkMapper chunkMapper;
     @Autowired
     private SimpleChunker simpleChunker;
@@ -41,7 +44,11 @@ public class DocumentServiceImpl implements DocumentService {
     private String storePath;
 
     @Override
-    public DocumentUploadVO uploadDocument(Long courseId, MultipartFile file) throws IOException {
+    public synchronized DocumentUploadVO uploadDocument(Long courseId, MultipartFile file) throws IOException {
+        // 单机文件索引一次处理一份课件，避免并发保存覆盖；先确认课程存在。
+        if (courseId == null || courseId < 1 || courseMapper.selectById(courseId) == null) {
+            throw new BizException(CodeEnum.COURSE_NOT_FOUND);
+        }
 
         // 同一课程下同名文件视为重复上传，直接拦住。
         // 否则会多出一条 document + 一整批 chunk + 一整批向量，
@@ -111,6 +118,10 @@ public class DocumentServiceImpl implements DocumentService {
 
         documentMapper.insert(document);// ← 先落库，数据库生成的 id 才会回填
         if ("DONE".equals(document.getStatus())) {
+            document.setStatus("INDEXING");
+            documentMapper.updateById(document);
+            List<String> newVectorIds = new ArrayList<>();
+            try {
 
             List<String> chunks = simpleChunker.split(text);
 
@@ -139,12 +150,37 @@ public class DocumentServiceImpl implements DocumentService {
                 );
                 aiDocs.add(new org.springframework.ai.document.Document(
                         String.valueOf(c.getId()), c.getContent(), meta));
+                newVectorIds.add(String.valueOf(c.getId()));
             }
 
-            vectorStore.add(aiDocs);                      // 批量算向量 + 进内存库
-            vectorStore.save(new File(storePath));        // 落盘，不 save 重启就没了
+            // ⚠️ 硅基流动的 embedding 接口单批只能十几条（实测 16 条 OK、32 条就 400 / 20015），
+            //    不能一次把 40 多块全丢进去，这里自己按 10 条一批调，不依赖框架的分批策略
+            int batchSize = 10;
+            for (int i = 0; i < aiDocs.size(); i += batchSize) {
+                int end = Math.min(i + batchSize, aiDocs.size());
+                vectorStore.add(aiDocs.subList(i, end));
+                log.info("向量入库进度：{}/{}", end, aiDocs.size());
+            }
+
+            vectorStore.save(new File(storePath));        // 所有批次加完，最后落盘一次
 
             log.info("向量入库完成：{} 块", aiDocs.size());
+            document.setStatus("DONE");
+            documentMapper.updateById(document);
+            } catch (Exception exception) {
+                // 失败课件不参与检索；删除本次已生成的部分向量，避免下次启动残留半批数据。
+                log.error("课件向量入库失败，documentId={}", document.getId(), exception);
+                try {
+                    if (!newVectorIds.isEmpty()) vectorStore.delete(newVectorIds);
+                    vectorStore.save(new File(storePath));
+                } catch (Exception cleanup) {
+                    log.error("向量清理失败，documentId={}", document.getId(), cleanup);
+                }
+                document.setStatus("FAILED");
+                document.setFailureReason("向量化或索引保存失败，请查看日志后重新上传");
+                documentMapper.updateById(document);
+                throw new BizException(CodeEnum.INDEX_OPERATION_FAILED);
+            }
         }
         documentUploadVO.setId(document.getId());
         documentUploadVO.setOriginalName(document.getOriginalName());

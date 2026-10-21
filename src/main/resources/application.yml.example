@@ -1,0 +1,82 @@
+server:
+  port: 18081
+
+spring:
+  application:
+    name: DocuAgent
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/docuagent?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: ${DB_PASSWORD:change-me}
+  ai:
+    openai:
+      api-key: ${AI_API_KEY}
+      base-url: https://api.siliconflow.cn
+      chat:
+        options:
+          model: Qwen/Qwen3-8B
+      embedding:
+        options:
+          model: BAAI/bge-m3
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+
+# ============ 业务配置 ============
+docuagent:
+  chunk:
+    size: 500            # 每块的字符数上限
+    overlap: 100         # 相邻块的重叠字符数（必须小于 size）
+  vector-store:
+    path: data/vector-store.json
+  retrieval:
+    top-k: 5
+    # 先不过滤（0.0 = 全收），跑一轮看真实分数分布，再决定卡在哪。
+    # 陷阱：设太高会一条都召回不到，设太低会全是噪音
+    similarity-threshold: 0.0
+    candidate-limit: 10
+    rrf-k: 60
+    fusion-enabled: false
+    rerank-enabled: false
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # SQL 日志走日志框架，可按级别开关（排查 SQL 时把 mapper 包调成 debug）
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      # ⚠️ 必须显式配 auto！MP 默认是雪花算法（ASSIGN_ID），
+      # 会往 AUTO_INCREMENT 列里塞 19 位大数，把自增 ID 顶掉
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# ============ 日志配置 ============
+logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
+  level:
+    root: info
+    # 自己的代码：想看更细的流程就改成 debug
+    com.docuagent: DEBUG
+    # MyBatis 的 SQL 日志（logger 名 = Mapper 接口全限定名）；排查 SQL 时改成 debug
+    com.docuagent.docuagent.mapper: warn
+    # 框架噪音统一压到 warn，只在真出问题时才出声
+    org.springframework.ai: warn
+    com.baomidou: warn
+    org.apache.ibatis: warn
+    com.zaxxer.hikari: warn
+    org.springframework.web: warn
+  pattern:
+    # 比默认格式精简：去掉进程号，时间只留时分秒，logger 名截短
+    console: "%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
+  file:
+    # 日志同时落到文件（放 target/ 下，自动被 .gitignore 忽略）
+    # 好处：出问题时直接翻文件，不用盯着控制台，也方便事后排查
+    name: target/logs/docuagent.log

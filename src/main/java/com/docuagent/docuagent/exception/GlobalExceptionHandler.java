@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.validation.BindException;                        // ← 改
 import org.springframework.web.servlet.resource.NoResourceFoundException;   // ← 改
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
 @Slf4j
@@ -36,6 +37,11 @@ public class GlobalExceptionHandler {
     public Result<Void> handleMissingParam(MissingServletRequestParameterException e) {
         log.warn("缺少必填参数：{}", e.getParameterName());
         return new Result<>(400, "缺少必填参数：" + e.getParameterName(), null);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public Result<Void> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        return new Result<>(400, "参数类型错误：" + e.getName(), null);
     }
 
     /** 路径不存在 → 404（不是 500） */

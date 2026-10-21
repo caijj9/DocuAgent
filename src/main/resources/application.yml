@@ -32,6 +32,15 @@ docuagent:
     overlap: 100         # 相邻块的重叠字符数（必须小于 size）
   vector-store:
     path: data/vector-store.json
+  retrieval:
+    top-k: 5
+    # 先不过滤（0.0 = 全收），跑一轮看真实分数分布，再决定卡在哪。
+    # 陷阱：设太高会一条都召回不到，设太低会全是噪音
+    similarity-threshold: 0.0
+    candidate-limit: 10
+    rrf-k: 60
+    fusion-enabled: false
+    rerank-enabled: false
 
 mybatis-plus:
   configuration:
@@ -49,6 +58,9 @@ mybatis-plus:
 
 # ============ 日志配置 ============
 logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
   level:
     root: info
     # 自己的代码：想看更细的流程就改成 debug

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
+import com.docuagent.docuagent.ai.retrieval.DurableVectorStore;
 
 @Configuration
 public class VectorStoreConfig {
@@ -17,7 +18,7 @@ public class VectorStoreConfig {
     @Bean
     public SimpleVectorStore vectorStore(EmbeddingModel embeddingModel) {
         // builder 需要一个 EmbeddingModel —— Spring AI 会按配置自动注入（硅基流动那个）
-        SimpleVectorStore store = SimpleVectorStore.builder(embeddingModel).build();
+        SimpleVectorStore store = new DurableVectorStore(embeddingModel);
 
         // 启动时把上次落盘的向量读回来。文件不存在就跳过（第一次跑必然不存在）
         File file = new File(storePath);
