@@ -66,4 +66,9 @@ class StudyOutputValidatorTest {
         var assertions=StudyAssertions.from(material);
         assertThat(assertions).hasSize(1);assertThat(assertions.get("A0").text()).startsWith("词法分析器");
     }
+    @Test void trueButIrrelevantQuestionMarkFactsCannotAnswerAStarComparison(){
+        assertThat(QaServiceImpl.symbolsCovered("r+与r*有什么区别？","r+等价于rr*，r?等价于ε|r")).isFalse();
+        assertThat(QaServiceImpl.symbolsCovered("r+与r*有什么区别？","r+表示一次或多次，r*表示零次或多次")).isTrue();
+        assertThat(QaServiceImpl.symbolsCovered("C++和Java有什么区别？","比较Java与C++")).isTrue();
+    }
 }

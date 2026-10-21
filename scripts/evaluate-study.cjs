@@ -10,6 +10,7 @@ async function call(url,body,method='POST'){
   const result=await r.json();if(result.code!==0)throw Error('business='+result.code+' '+result.msg);return result.data;
 }
 const norm=s=>s.replace(/\s+/g,'').toLowerCase();
+const symbols=s=>new Set([...s.matchAll(/(?<![A-Za-z0-9_])([A-Za-z][A-Za-z0-9_]*[+*?])(?![A-Za-z0-9_+*?])/g)].map(m=>m[1]));
 async function main(){
   for(const q of questions){
     let session=null;const start=performance.now();
@@ -22,16 +23,18 @@ async function main(){
       const answer=await call('/qa/ask',{question:q.question,courseId:q.courseId,sessionId:session?.sessionId});
       const expectedRefusal=['unanswerable','course_isolation'].includes(q.type);
       const evidence=q.checks.every(check=>answer.references.some(ref=>ref.documentName===check.document&&check.anchors.some(anchor=>norm(ref.snippet).includes(norm(anchor)))));
-      const passed=expectedRefusal?/资料中没有相关内容/.test(answer.answer)&&answer.references.length===0:evidence&&answer.references.length>0;
-      rows.push({id:q.id,type:q.type,passed,elapsedMs:Math.round(performance.now()-start),question:q.question,expectedAnswer:q.answer,...answer});
+      const present=symbols(answer.answer),symbolCoverage=[...symbols(q.resolvedQuestion||q.question)].every(s=>present.has(s));
+      const passed=expectedRefusal?/资料中没有相关内容/.test(answer.answer)&&answer.references.length===0:evidence&&answer.references.length>0&&symbolCoverage;
+      rows.push({id:q.id,type:q.type,passed,citationPassed:evidence&&answer.references.length>0,symbolCoverage,elapsedMs:Math.round(performance.now()-start),question:q.question,expectedAnswer:q.answer,...answer});
       console.log(q.id+' '+q.type+' '+(passed?'PASS':'FAIL')+' refs='+answer.references.length);
     }catch(error){rows.push({id:q.id,type:q.type,passed:false,error:error.message,elapsedMs:Math.round(performance.now()-start)});console.log(q.id+' ERROR '+error.message);}
     finally{if(session){try{await call('/session/'+session.sessionId,null,'DELETE');}catch{}}}
     fs.writeFileSync(path.join(directory,'results.json'),JSON.stringify(rows,null,2));
   }
   const passed=rows.filter(r=>r.passed).length;
-  const lines=['# 第二段固定15题QA验收','','题目SHA256：`'+crypto.createHash('sha256').update(source).digest('hex')+'`','',
-    '正例自动指标为所需原文锚点是否全部出现在返回引用中，不能代替人工语义评审。无答案/课程隔离要求明确拒答且无引用；多轮题先运行真实上一轮问答。','',
+  const lines=['# 第二段固定15题QA验收','','评测规则v2：增加运算符对象覆盖检查；问题集及答案锚点不变。旧v1曾把Q14答成r?误算通过，历史报告保留，不与v2直接当作同口径准确率比较。','',
+    '题目SHA256：`'+crypto.createHash('sha256').update(source).digest('hex')+'`','',
+    '正例自动指标为所需原文锚点是否全部出现在返回引用中，以及问题中的正则运算符对象是否完整出现。rr*不能代替r*本身。仍不能代替人工语义评审。无答案/课程隔离要求明确拒答且无引用；多轮题先运行真实上一轮问答。','',
     '|题号|类型|结果|耗时ms|改写问题|','|---|---|---|---|---|'];
   for(const row of rows)lines.push('|'+[row.id,row.type,row.passed?'PASS':row.error||'FAIL',row.elapsedMs,(row.rewrittenQuestion||'').replace(/\|/g,'/')].join('|')+'|');
   lines.push('','通过：'+passed+'/'+rows.length+'。失败全部保留。','本次明细：`'+path.relative(path.join(root,'eval'),directory).replace(/\\/g,'/')+'/results.json`。','');

@@ -1,0 +1,301 @@
+[
+  {
+    "id": "Q01",
+    "type": "direct",
+    "passed": true,
+    "elapsedMs": 4712,
+    "question": "词法分析器读入什么、输出什么，还会过滤哪些内容？",
+    "expectedAnswer": "读入字符流、组成词素、输出词法单元序列，过滤空白、换行、制表符和注释。",
+    "answer": "词法分析器读入字符流，输出词法单元序列。它还会过滤空白、换行、制表符、注释等。[1][2]",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 2509,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "snippet": "\n编译原理\n2 – 词法分析 (ch3)\n\n王焱林 wangylin36@mail.sysu.edu.cn\n\n词\n法\n分\n析\n\n词法分析器的作用\n词法单元的规约 (正则表达式)\n词法单元的识别 (状态转换图)\n词法分析器生成工具及设计\n有穷自动机\n\n2\n\nØ 读入字符流，组成词素，输出词法单元序列\n\nØ 过滤空白、换行、制表符、注释等\n\nØ 将词素添加到符号表中\n\n词法分析器的作用\n\n3\n\n源程序\n词法分\n析器\n\n词法单元\n\n语法分\n析器\n\n符号表\n\ngetNextToken\n\n输出至语\n义分析\n\n词法分析器与语法分析器之间的交互\n\n词法分析器\n\n语法分析器\n\n语义分析器\n\n中间代码生成器\n\n机器无关代码优化器\n\n目标代码生成器\n\n机器相关代码优化器\n\n字符流\n\n词法单元流\n\n语法树\n\n语法树\n\n中间表示形式\n\n中间表示形式\n\n目标机器语言\n\n目标机器语言\n\n为什么要设立独立的词法分析器.\n\n4\n\nØ简化编译器的设计\n\n• 词法分析器可以首先完成一些简单的处理工作\n\nØ模块化设计，增强编译器的可移植性\n\n词法单元、模式、词素\n\n5\n\nØ词法单元 (Token)\n• <词法单元名、属性值",
+        "score": 0.03278688524590164
+      },
+      {
+        "index": 2,
+        "chunkId": 2512,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "snippet": " 没有其他组件的帮助，词法分析器很难发现源代码中的错误\n• fi 是关键词 if 的误写还是一个函数标识符？ à 返回 id 词法单元给语\n\n法分析器处理\n\nØ所有模式都无法和剩余输入的某个前缀匹配\n• 词法分析器不能继续处理输入\n• 错误恢复策略\n\n• 从剩余的输入中删除一个字符\n• 向剩余的输入中插入一个遗漏的字符\n• 用一个字符来替换另一个字符\n• 交换两个相邻的字符\n\n词\n法\n分\n析\n\n词法分析器的作用\n词法单元的规约 (正则表达式)\n词法单元的识别 (状态转换图)\n词法分析器生成工具及设计\n有穷自动机\n\n9\n\n词法单元的规约 - 正则表达式\n\n10\n\nØ正则表达式 (regular expression)可以高效、简洁地描述处理\n\n词法单元时用到的模式类型\n\nØ学习内容\n\n• 串和语言\n\n• 语言上的运算\n\n• 正则表达式和正则定义\n\n• 正则表达式的扩展\n\n串和语言\n\n11\n\nØ字母表 (Alphabet) ：一个有穷的符号集合\n\n• 符号典型例子：字母、数字、标点符号\n\n• 字母表例子：{0, 1}, ASCII, Unicode\n\n• 理论上，我们可以把任意的有限集合看",
+        "score": 0.03225806451612903
+      }
+    ],
+    "rewrittenQuestion": "词法分析器读入什么、输出什么，还会过滤哪些内容？",
+    "sessionId": null
+  },
+  {
+    "id": "Q02",
+    "type": "direct",
+    "passed": true,
+    "elapsedMs": 4828,
+    "question": "上下文无关文法CFG包含哪四个部分？",
+    "expectedAnswer": "终结符号、非终结符号、产生式和起始符号。",
+    "answer": "上下文无关文法CFG包含四个部分：终结符号、非终结符号、产生式和起始符号。[1][2]",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 2690,
+        "documentId": 18,
+        "documentName": "3-语法分析(ch4)-1.pdf",
+        "snippet": "程语言的大\n部分语法\n\nØ “前端的其余部分”\n• 将词法单元的信息收集到符号表中、类型检查和其他类\n\n型的语义分析、生成中间代码等\n\n语法分析器.(2)\n\n4\n\n语\n法\n分\n析\n\n语法分析器\n上下文无关文法\n设计文法\n语法分析技术\n语法分析器生成工具\n\n5\n\nØ程序设计语言构造的语法可使用上下文无关文法 (Context-Free Grammar) \n或 BNF 表示法来描述\n• 文法可给出精确易懂的语法规则\n\n• 可以自动构造出某些类型的文法的语法分析器\n\n• 文法指出了语言的结构，有助于进一步的语义处理/代码生成\n\n• 支持语言的演化和迭代\n\n程序设计语言构造的描述\n\n6\n\nØ一个上下文无关文法 (CFG) 包含四个部分\n• 终结符号：组成串的基本符号(词法单元名字)\n• 非终结符号：表示串的集合的语法变量\n\n• 在程序设计语言中通常对应于某个程序构造，比如stmt (语句)\n• 给出了语言的层次结构，是语法分析和翻译的关键\n\n• 产生式：描述将终结符号和非终结符号组成串的方法\n• 形式：头(左) 部 à 体(右) 部\n• 头部是一个非终结符号，右部是一个符号串\n• 例子：exp",
+        "score": 0.03278688524590164
+      },
+      {
+        "index": 2,
+        "chunkId": 2691,
+        "documentId": 18,
+        "documentName": "3-语法分析(ch4)-1.pdf",
+        "snippet": "出了语言的层次结构，是语法分析和翻译的关键\n\n• 产生式：描述将终结符号和非终结符号组成串的方法\n• 形式：头(左) 部 à 体(右) 部\n• 头部是一个非终结符号，右部是一个符号串\n• 例子：expression à expression + term\n\n• 起始符号：某个被指定的非终结符号\n• 它对应的串的集合就是文法的语言\n\n上下文无关文法\n\n7\n\n类 ⽐ ： 正 则 定 义\n\n– letter_ àA | … | Z | a | … | z | _\n– digit à 0 | 1 | … | 9\n– id à letter_ ( letter_ | digit )*\n\nØ简单算术表达式 (expression) 的文法\n• 终结符号：id, +, –, *, /, (, )\n• 非终结符号：expression (表达式), term (项), factor (因子)\n• 起始符号：expression\n• 产生式集合\n\n• expression à expression + term  \n• expression à expression – term  \n• express",
+        "score": 0.029857397504456328
+      }
+    ],
+    "rewrittenQuestion": "上下文无关文法CFG包含哪四个部分？",
+    "sessionId": null
+  },
+  {
+    "id": "Q03",
+    "type": "direct",
+    "passed": false,
+    "elapsedMs": 9908,
+    "question": "FIRST和FOLLOW集合分别表示什么？",
+    "expectedAnswer": "FIRST是可推导串的首符号集合，能推出空串时含空串；FOLLOW是句型中可能紧跟非终结符右边的终结符集合。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "FIRST和FOLLOW集合分别表示什么？",
+    "sessionId": null
+  },
+  {
+    "id": "Q04",
+    "type": "exact_term",
+    "passed": true,
+    "elapsedMs": 6329,
+    "question": "正则表达式里r+是什么意思，它与rr*是什么关系？",
+    "expectedAnswer": "表示r的一个或多个实例，r+等价于rr*。",
+    "answer": "在正则表达式中，r+ 表示一个或多个 r 的实例，即 r 的正闭包。它与 rr* 是等价的，因为 rr* 表示 r 出现一次或多次，同样表示一个或多个 r 的实例。[1][2]",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 2518,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "snippet": "的例子\n\n20\n\nØ C语言标识符的正则定义\n\n• letter_ à A | B | … | Z | a | b | … | z | _\n\n• digit à 0 | 1 | … | 9\n\n• id à letter_ ( letter_ | digit )*\n\nØ id对应的正则表达式为\n\n• (A | B | … | Z | a | b | … | z | _) ( (A | B | … | Z | a | b | … | z | _) | (0 | 1 | … | 9) )*\n\n正则表达式的扩展\n\n21\n\nØ 基本运算符：选择、连接、Kleene闭包\n\nØ 扩展运算符\n\n• 一个或多个实例：单目后缀 +\n\n• r+ 等价于 rr*\n\n• 零个或一个实例：？\n• r? 等价于ε | r\n\n• 字符类\n\n• [a1a2…an]等价于a1 | a2 | … | an\n\n• 符号，如：[a-e]等价于a | b | c | d | e\n\nØ 使正则表达式更简洁，但不会使其描述能力增强\n\n正则表达式与词法单元的识别\n\n22\n\nØ 词法分析器要求能够检查输入字符串，在其前缀中找出和某个模式",
+        "score": 0.03252247488101534
+      },
+      {
+        "index": 2,
+        "chunkId": 2516,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "snippet": "字母、数位集合的名字，再用并、链接、闭包等运算来描述标\n\n识符。\n\nØà 正则表达式！\n\nØ letter (letter | digit)* \n\n正则表达式\n\n17\n\nØ 字母表 Σ 上的正则表达式的定义\n• L(r) 表示正则表达式 r 所表达的语言\n\n• 基本部分\n• ε 是一个正则表达式，L(ε) = {ε}\n• 如果 a 是 Σ 上的一个符号，那么 a 是正则表达式，L(a) = {a}\n\n• 归纳步骤\n• 选择：(r)|(s)，L((r)|(s)) = L(r) È L(s)\n• 连接：(r)(s)，L((r)(s)) = L(r)L(s)\n• 闭包：(r)*，L( (r)* ) = ( L(r) )*\n• 括号：(r)，L((r)) = L(r)\n\nØ 运算的优先级：* > 连接 > |，如 (a) | ((b)*(c)) = a | b*c\nØ正则语言：可以用一个正则表达式定义的语言\n\n正则表达式的例子\n\n18\n\nØ字母表 Σ = {a, b}\n\n• L(a | b) = {a, b}\n\n• L((a | b) (a | b)) = {aa, ab, ba, bb}\n\n",
+        "score": 0.032018442622950824
+      }
+    ],
+    "rewrittenQuestion": "正则表达式里r+是什么意思，它与rr*是什么关系？",
+    "sessionId": null
+  },
+  {
+    "id": "Q05",
+    "type": "unanswerable",
+    "passed": true,
+    "elapsedMs": 1389,
+    "question": "MySQL事务的四种隔离级别分别是什么？",
+    "expectedAnswer": "应拒答：这三份编译原理资料未提供MySQL事务隔离级别。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "MySQL事务的四种隔离级别分别是什么？",
+    "sessionId": null
+  },
+  {
+    "id": "Q06",
+    "type": "unanswerable",
+    "passed": true,
+    "elapsedMs": 1373,
+    "question": "Python的GIL在多线程执行时如何工作？",
+    "expectedAnswer": "应拒答：现有课件未提供Python GIL的工作方式。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "Python的GIL在多线程执行时如何工作？",
+    "sessionId": null
+  },
+  {
+    "id": "Q07",
+    "type": "unanswerable",
+    "passed": true,
+    "elapsedMs": 1370,
+    "question": "2026年编译原理期末考试的具体日期和教室是什么？",
+    "expectedAnswer": "应拒答：现有提取文本没有具体考试日期和教室。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "2026年编译原理期末考试的具体日期和教室是什么？",
+    "sessionId": null
+  },
+  {
+    "id": "Q08",
+    "type": "cross_document",
+    "passed": false,
+    "elapsedMs": 8907,
+    "question": "结合引论和词法分析课件，编译器前端收集的信息存在哪里，标识符词法单元的属性如何引用这些信息？",
+    "expectedAnswer": "前端把源程序相关信息存入符号表；标识符属性可以包含名字、类型、位置，或者指向符号表条目的链接。",
+    "answer": "编译器前端收集的信息存在符号表中，标识符词法单元的属性通过符号表条目链接来引用这些信息[1][2]。",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 2510,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "snippet": "\n\n4\n\nØ简化编译器的设计\n\n• 词法分析器可以首先完成一些简单的处理工作\n\nØ模块化设计，增强编译器的可移植性\n\n词法单元、模式、词素\n\n5\n\nØ词法单元 (Token)\n• <词法单元名、属性值>\n• 词法单元名是表示词法单位种类的抽象符号，语法分析器通过单元名即可确\n\n定词法单元序列的结构\n• 属性值通常用于语义分析之后的阶段\n\nØ模式 (Pattern)\n• 描述了一类词法单元的词素可能具有的形式\n\nØ词素 (Lexeme)\n• 源程序中的字符序列\n• 它和某个词法单元的模式匹配，被词法分析器识别为该词法单元的实例\n\n例子\n\n6\n\nØprintf(\"Total = %d\\n\", score)；\n• printf 和 score 与标识符 (id) 的模式匹配\n• \"Total = %d\\n\" 与 literal 的模式匹配\n\n词法单元 非正式描述 词素示例\n\nif 字符i, f if\n\nelse 字符e, l, s, e else\n\ncomparison < 或 > 或 <= 或 >= 或== 或 != <=, !=\n\nid 字母开头的字母/数字串 Pi, socre, D2",
+        "score": 0.03252247488101534
+      },
+      {
+        "index": 2,
+        "chunkId": 2511,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "snippet": "if\n\nelse 字符e, l, s, e else\n\ncomparison < 或 > 或 <= 或 >= 或== 或 != <=, !=\n\nid 字母开头的字母/数字串 Pi, socre, D2\n\nnumber 任何数字常量 3.14159, 0, 6.02e23\n\nliteral 在两个”之间，除”以外的任何字符 “core dumped”\n\n词法单元的例子\n\n词法单元的属性\n\n7\n\nØ一个模式匹配多个词素时，必须通过属性来传递附加的信息\n\n• 属性值将被用于语义分析、代码生成等阶段\n\nØ不同的目的需要不同的属性\n\n• 属性值通常是一个结构化数据（包含多种信息）\n\nØ如词法单元 id 的属性\n\n• id 内容、类型、第一次出现的位置、…（或存放于符号表中，属性为\n\n符号表条目链接）\n\n词法错误 - 遇到不符合词法的程序如何处理？.\n\n8\n\nØfi (a == f(x)) ...\n• 没有其他组件的帮助，词法分析器很难发现源代码中的错误\n• fi 是关键词 if 的误写还是一个函数标识符？ à 返回 id 词法单元给语\n\n法分析器处理\n\nØ所有模式都无法和剩余输入的某个前缀匹配\n",
+        "score": 0.031544957774465976
+      }
+    ],
+    "rewrittenQuestion": "结合引论和词法分析课件，编译器前端收集的信息存在哪里，标识符词法单元的属性如何引用这些信息？",
+    "sessionId": null
+  },
+  {
+    "id": "Q09",
+    "type": "cross_document",
+    "passed": true,
+    "elapsedMs": 6310,
+    "question": "结合词法分析和语法分析课件，字符流如何交给语法分析器，语法分析正确后生成什么？",
+    "expectedAnswer": "词法分析器从字符流生成词法单元序列；语法分析器接收该序列，确认能否由文法生成，正确时生成语法分析树，通常是AST。",
+    "answer": "字符流通过词法分析器处理后，生成词法单元序列，然后将该序列交给语法分析器。语法分析器在确认序列符合语言文法后，生成语法分析树（通常为抽象语法树，AST）。[1][2]",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 2509,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "snippet": "\n编译原理\n2 – 词法分析 (ch3)\n\n王焱林 wangylin36@mail.sysu.edu.cn\n\n词\n法\n分\n析\n\n词法分析器的作用\n词法单元的规约 (正则表达式)\n词法单元的识别 (状态转换图)\n词法分析器生成工具及设计\n有穷自动机\n\n2\n\nØ 读入字符流，组成词素，输出词法单元序列\n\nØ 过滤空白、换行、制表符、注释等\n\nØ 将词素添加到符号表中\n\n词法分析器的作用\n\n3\n\n源程序\n词法分\n析器\n\n词法单元\n\n语法分\n析器\n\n符号表\n\ngetNextToken\n\n输出至语\n义分析\n\n词法分析器与语法分析器之间的交互\n\n词法分析器\n\n语法分析器\n\n语义分析器\n\n中间代码生成器\n\n机器无关代码优化器\n\n目标代码生成器\n\n机器相关代码优化器\n\n字符流\n\n词法单元流\n\n语法树\n\n语法树\n\n中间表示形式\n\n中间表示形式\n\n目标机器语言\n\n目标机器语言\n\n为什么要设立独立的词法分析器.\n\n4\n\nØ简化编译器的设计\n\n• 词法分析器可以首先完成一些简单的处理工作\n\nØ模块化设计，增强编译器的可移植性\n\n词法单元、模式、词素\n\n5\n\nØ词法单元 (Token)\n• <词法单元名、属性值",
+        "score": 0.032266458495966696
+      },
+      {
+        "index": 2,
+        "chunkId": 2689,
+        "documentId": 18,
+        "documentName": "3-语法分析(ch4)-1.pdf",
+        "snippet": "\n编译原理\n3 – 语法分析 (ch4)\n\n王焱林 wangylin36@mail.sysu.edu.cn\n\n语\n法\n分\n析\n\n语法分析器\n上下文无关文法\n设计文法\n语法分析技术\n语法分析器生成工具\n\nØ基本作用\n• 从词法分析器获得词法单元的序列，确认该序列是否可以由语言的文法生成\n• 对于语法错误的程序，报告错误信息\n\n• 对于语法正确的程序，生成语法分析树 (简称语法树)\n• 通常产生的是抽象语法树（AST）\n\n语法分析器的作用(1)\n\n3\n\nØ分类\n• 通用的\n\n• 如Cocke-Younger-Kasami、Earley算法等通用语法分析方法可以\n对任意文法做语法分析，但效率很低，不能用于编译器产品\n\n• 非通用的（专用）\n• 自顶向下的：从顶（根节点）向底部（叶子）构造语法分析树\n• 自底向上的：从叶子逐渐向根节点构造语法分析树\n• à只能处理某些文法子类，但已经足够描述现代编程语言的大\n部分语法\n\nØ “前端的其余部分”\n• 将词法单元的信息收集到符号表中、类型检查和其他类\n\n型的语义分析、生成中间代码等\n\n语法分析器.(2)\n\n4\n\n语\n法\n分\n析\n\n语法分析器\n上下文",
+        "score": 0.031009615384615385
+      }
+    ],
+    "rewrittenQuestion": "结合词法分析和语法分析课件，字符流如何交给语法分析器，语法分析正确后生成什么？",
+    "sessionId": null
+  },
+  {
+    "id": "Q10",
+    "type": "cross_document",
+    "passed": true,
+    "elapsedMs": 12897,
+    "question": "结合引论和语法分析课件，语法分析的输出如何帮助语义分析，语义分析还需要什么信息？",
+    "expectedAnswer": "语法分析构建语法树；语义分析利用语法树和符号表检查语义约束并收集类型信息。",
+    "answer": "语法分析的输出是语法分析树（AST），它为语义分析提供了结构化的信息，帮助检查源程序是否满足语义约束。语义分析还需要符号表中的信息，用于类型检查和其他语义处理。[1][2]",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 2689,
+        "documentId": 18,
+        "documentName": "3-语法分析(ch4)-1.pdf",
+        "snippet": "\n编译原理\n3 – 语法分析 (ch4)\n\n王焱林 wangylin36@mail.sysu.edu.cn\n\n语\n法\n分\n析\n\n语法分析器\n上下文无关文法\n设计文法\n语法分析技术\n语法分析器生成工具\n\nØ基本作用\n• 从词法分析器获得词法单元的序列，确认该序列是否可以由语言的文法生成\n• 对于语法错误的程序，报告错误信息\n\n• 对于语法正确的程序，生成语法分析树 (简称语法树)\n• 通常产生的是抽象语法树（AST）\n\n语法分析器的作用(1)\n\n3\n\nØ分类\n• 通用的\n\n• 如Cocke-Younger-Kasami、Earley算法等通用语法分析方法可以\n对任意文法做语法分析，但效率很低，不能用于编译器产品\n\n• 非通用的（专用）\n• 自顶向下的：从顶（根节点）向底部（叶子）构造语法分析树\n• 自底向上的：从叶子逐渐向根节点构造语法分析树\n• à只能处理某些文法子类，但已经足够描述现代编程语言的大\n部分语法\n\nØ “前端的其余部分”\n• 将词法单元的信息收集到符号表中、类型检查和其他类\n\n型的语义分析、生成中间代码等\n\n语法分析器.(2)\n\n4\n\n语\n法\n分\n析\n\n语法分析器\n上下文",
+        "score": 0.032266458495966696
+      },
+      {
+        "index": 2,
+        "chunkId": 2567,
+        "documentId": 14,
+        "documentName": "1-引论(ch1)-2026.pdf",
+        "snippet": ", b , c ;\n\n➢文法：\n\n<D> → <T> <IDS>;\n\n<T> → int | real | char | bool\n\n<IDS> → id | <IDS>, id\n\n，\n\n;\n\n<D>\n\n<IDS>\n\nid  \n\n(a)\n\n<T>\n\nid  \n\n(c)\n\nint <IDS>\n\n<IDS> ， id  \n\n(b)\n\n如何根据语法规则为\n输入句子构造分析树？\n\n27\n\n3.语义分析\n\n28\n\n➢ 语义分析 (Semantic analysis)\n\n• 使用语法树和符号表中的信息，检查源程序是否满足语言定义的语义\n约束\n\n• 同时收集类型信息，用于代码生成、类型检查、类型转换\n\n• 类比例子：可乐爱喝我 符合语义吗？\n\n词法分析器\n\n语法分析器\n\n语义分析器\n\n中间代码生成器\n\n机器无关代码优化器\n\n目标代码生成器\n\n机器相关代码优化器\n\n字符流\n\n词法单元流\n\n语法树\n\n语法树\n\n中间表示形式\n\n中间表示形式\n\n目标机器语言\n\n目标机器语言\n\n语义分析的主要任务\n\n29\n\n➢收集标识符的属性信息\n➢种属 (Kind)\n\n➢ 简单变量、复合变量（数组、记录、…）、过程、…\n\n",
+        "score": 0.029437229437229435
+      }
+    ],
+    "rewrittenQuestion": "结合引论和语法分析课件，语法分析的输出如何帮助语义分析，语义分析还需要什么信息？",
+    "sessionId": null
+  },
+  {
+    "id": "Q11",
+    "type": "course_isolation",
+    "passed": true,
+    "elapsedMs": 13,
+    "question": "正则表达式r+等价于什么？",
+    "expectedAnswer": "课程2未上传课件，应返回空检索结果，不得引用课程1词法分析资料。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "正则表达式r+等价于什么？",
+    "sessionId": null
+  },
+  {
+    "id": "Q12",
+    "type": "course_isolation",
+    "passed": true,
+    "elapsedMs": 8,
+    "question": "上下文无关文法包含哪四个部分？",
+    "expectedAnswer": "课程2为空，不得引用课程1的语法分析资料。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "上下文无关文法包含哪四个部分？",
+    "sessionId": null
+  },
+  {
+    "id": "Q13",
+    "type": "course_isolation",
+    "passed": true,
+    "elapsedMs": 7,
+    "question": "FIRST集合和FOLLOW集合有什么区别？",
+    "expectedAnswer": "课程2为空，不得引用课程1的FIRST和FOLLOW资料。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "FIRST集合和FOLLOW集合有什么区别？",
+    "sessionId": null
+  },
+  {
+    "id": "Q14",
+    "type": "followup",
+    "passed": false,
+    "elapsedMs": 15728,
+    "question": "那它与r*有什么区别？",
+    "expectedAnswer": "r+为一个或多个实例，r*允许零次；本阶段接口尚不接收history，不能据此宣称已实现多轮理解。",
+    "answer": "资料中没有相关内容，无法依据当前课程资料回答。",
+    "references": [],
+    "rewrittenQuestion": "正则表达式r+与r*有什么区别？",
+    "sessionId": "729b3f2e-424d-4791-bb00-f7a611e01d4a"
+  },
+  {
+    "id": "Q15",
+    "type": "followup",
+    "passed": true,
+    "elapsedMs": 13154,
+    "question": "它接收什么，正确时又生成什么？",
+    "expectedAnswer": "接收词法单元序列；正确时生成语法分析树，通常为AST。本阶段只测原始追问的检索表现。",
+    "answer": "语法分析器接收词法单元的序列，对于语法正确的程序生成抽象语法树。[1][2]",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 2689,
+        "documentId": 18,
+        "documentName": "3-语法分析(ch4)-1.pdf",
+        "snippet": "\n编译原理\n3 – 语法分析 (ch4)\n\n王焱林 wangylin36@mail.sysu.edu.cn\n\n语\n法\n分\n析\n\n语法分析器\n上下文无关文法\n设计文法\n语法分析技术\n语法分析器生成工具\n\nØ基本作用\n• 从词法分析器获得词法单元的序列，确认该序列是否可以由语言的文法生成\n• 对于语法错误的程序，报告错误信息\n\n• 对于语法正确的程序，生成语法分析树 (简称语法树)\n• 通常产生的是抽象语法树（AST）\n\n语法分析器的作用(1)\n\n3\n\nØ分类\n• 通用的\n\n• 如Cocke-Younger-Kasami、Earley算法等通用语法分析方法可以\n对任意文法做语法分析，但效率很低，不能用于编译器产品\n\n• 非通用的（专用）\n• 自顶向下的：从顶（根节点）向底部（叶子）构造语法分析树\n• 自底向上的：从叶子逐渐向根节点构造语法分析树\n• à只能处理某些文法子类，但已经足够描述现代编程语言的大\n部分语法\n\nØ “前端的其余部分”\n• 将词法单元的信息收集到符号表中、类型检查和其他类\n\n型的语义分析、生成中间代码等\n\n语法分析器.(2)\n\n4\n\n语\n法\n分\n析\n\n语法分析器\n上下文",
+        "score": 0.03278688524590164
+      },
+      {
+        "index": 2,
+        "chunkId": 2566,
+        "documentId": 14,
+        "documentName": "1-引论(ch1)-2026.pdf",
+        "snippet": "单元 <=>\n\n• 不需要属性值，省略第二个分量\n\n• 词素60 → 词法单元 <60>\n\n• 建立形如<number, 4>的token，但数字的词法单元有特殊处理，后面课程将会学习。\n\n• 分隔词素的空格会被词法分析器忽略\n\n2.语法分析\n\n26\n\n➢ 语法分析/解析 (Syntax analysis/parsing)\n\n• 根据各个词法单元的第一个分量来创建树型的中间表示形式，通\n常是语法树 (Syntax tree)\n\n• 中间表示形式指出了词法单元流的语法结构\n• 类比例子：可乐爱喝我 符合语法吗？\n\n词法分析器\n\n语法分析器\n\n语义分析器\n\n中间代码生成器\n\n机器无关代码优化器\n\n目标代码生成器\n\n机器相关代码优化器\n\n字符流\n\n词法单元流\n\n语法树\n\n语法树\n\n中间表示形式\n\n中间表示形式\n\n目标机器语言\n\n目标机器语言\n\n例：变量声明语句的语法树\n\n➢输入：\n\nint a , b , c ;\n\n➢文法：\n\n<D> → <T> <IDS>;\n\n<T> → int | real | char | bool\n\n<IDS> → id | <IDS>, id\n\n，\n\n;\n\n<D>",
+        "score": 0.015625
+      }
+    ],
+    "rewrittenQuestion": "语法分析器接收词法单元的序列，对于语法正确的程序生成抽象语法树",
+    "sessionId": "6e21bbf6-8903-40dd-a820-a71249c33c54"
+  }
+]

@@ -67,13 +67,23 @@ public class QaServiceImpl implements QaService {
     }
 
     private JsonNode review(Qa result,String query){
+        if(!symbolsCovered(query,result.answer()))return mapper.createObjectNode().put("supported",false)
+                .put("reason","回答没有覆盖问题中的全部符号对象。不能把r*替换成r?，rr*也不能代替对r*本身的解释。请逐一回答原问题对象，证据不足则拒答。");
         if(!equationsSupported(result.answer(),result.references())){
             return mapper.createObjectNode().put("supported",false).put("reason","回答中的等价公式未出现在引用原文中。请删除未经问题要求的等价公式，不得把r?等算子的公式套给其他算子。");
         }
         return model.json("核对答疑是否真正有引用依据。只能看本次给出的references原文，逐项检查answer的所有事实，"
                 +"尤其完整列表的每一项是否都在引用中出现。不能用其他资料或常识补足引用。"
+                +"还要检查是否完整回答question：不能只给出真实但答非所问的事实，不能替换问题中的概念或符号。"
                 +"只返回{\"supported\":true或false,\"reason\":\"简洁说明\"}。",
                 Map.of("question",query,"answer",result.answer(),"references",result.references()),700);
+    }
+    /** rr*是一个完整表达式，不能因为包含r*子串就视为已经回答r*的含义。 */
+    public static boolean symbolsCovered(String question,String answer){
+        Pattern symbol=Pattern.compile("(?<![A-Za-z0-9_])([A-Za-z][A-Za-z0-9_]*[+*?])(?![A-Za-z0-9_+*?])");
+        Set<String> required=new HashSet<>(),present=new HashSet<>();Matcher m=symbol.matcher(question);
+        while(m.find())required.add(m.group(1));m=symbol.matcher(answer);while(m.find())present.add(m.group(1));
+        return present.containsAll(required);
     }
     /** 对简单符号等价关系做逐字证据检查，防止r*、r?等相似算子被模型混用。 */
     public static boolean equationsSupported(String answer,List<Reference> references){
