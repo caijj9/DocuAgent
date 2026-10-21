@@ -1,0 +1,3 @@
+id,type,phase,verdict,top1Score,elapsedMs
+Q01,direct,rerank,pass,10,4154
+Q04,exact_term,rerank,pass,10,10184

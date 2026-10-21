@@ -1,0 +1,35 @@
+[
+  {
+    "phase": "vector",
+    "retrievalHit": 4,
+    "retrievalTotal": 7,
+    "isolationPassed": 3,
+    "isolationTotal": 3,
+    "errors": 0,
+    "pendingRefusal": 3,
+    "pendingHistory": 2,
+    "elapsedMs": 1908
+  },
+  {
+    "phase": "fusion",
+    "retrievalHit": 5,
+    "retrievalTotal": 7,
+    "isolationPassed": 3,
+    "isolationTotal": 3,
+    "errors": 0,
+    "pendingRefusal": 3,
+    "pendingHistory": 2,
+    "elapsedMs": 1794
+  },
+  {
+    "phase": "rerank",
+    "retrievalHit": 5,
+    "retrievalTotal": 7,
+    "isolationPassed": 3,
+    "isolationTotal": 3,
+    "errors": 0,
+    "pendingRefusal": 3,
+    "pendingHistory": 2,
+    "elapsedMs": 117544
+  }
+]

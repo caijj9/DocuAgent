@@ -1,0 +1,130 @@
+[
+  {
+    "id": "Q01",
+    "type": "direct",
+    "phase": "rerank",
+    "verdict": "pass",
+    "elapsedMs": 4154,
+    "top1Score": 10,
+    "scoreType": "llm_relevance_0_10",
+    "top3Relevant": [
+      true,
+      false,
+      false
+    ],
+    "matchedChecks": 1,
+    "totalChecks": 1,
+    "rawFollowupHit": null,
+    "hits": [
+      {
+        "chunkId": 2509,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 10,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": true,
+        "content": "\n编译原理\n2 – 词法分析 (ch3)\n\n王焱林 wangylin36@mail.sysu.edu.cn\n\n词\n法\n分\n析\n\n词法分析器的作用\n词法单元的规约 (正则表达式)\n词法单元的识别 (状态转换图)\n词法分析器生成工具及设计\n有穷自动机\n\n2\n\nØ 读入字符流，组成词素，输出词法单元序列\n\nØ 过滤空白、换行、制表符、注释等\n\nØ 将词素添加到符号表中\n\n词法分析器的作用\n\n3\n\n源程序\n词法分\n析器\n\n词法单元\n\n语法分\n析器\n\n符号表\n\ngetNextToken\n\n输出至语\n义分析\n\n词法分析器与语法分析器之间的交互\n\n词法分析器\n\n语法分析器\n\n语义分析器\n\n中间代码生成器\n\n机器无关代码优化器\n\n目标代码生成器\n\n机器相关代码优化器\n\n字符流\n\n词法单元流\n\n语法树\n\n语法树\n\n中间表示形式\n\n中间表示形式\n\n目标机器语言\n\n目标机器语言\n\n为什么要设立独立的词法分析器.\n\n4\n\nØ简化编译器的设计\n\n• 词法分析器可以首先完成一些简单的处理工作\n\nØ模块化设计，增强编译器的可移植性\n\n词法单元、模式、词素\n\n5\n\nØ词法单元 (Token)\n• <词法单元名、属性值"
+      },
+      {
+        "chunkId": 2564,
+        "documentId": 14,
+        "documentName": "1-引论(ch1)-2026.pdf",
+        "score": 10,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "器\n\n语法分析器\n\n语义分析器\n\n中间代码生成器\n\n机器无关代码优化器\n\n目标代码生成器\n\n机器相关代码优化器\n\n字符流\n\n词法单元流\n\n语法树\n\n语法树\n\n中间表示形式\n\n中间表示形式\n\n目标机器语言\n\n目标机器语言\n\n1.词法分析\n\n24\n\n➢ 词法分析/扫描(Lexical analysis/Scanning)\n\n• 读入源程序的字符流，输出为有意义的词素 (Lexeme)的序列\n\n• 对每个词素，产生以下形式的词法单元(token)作为输出：\n\n<token-name, attribute-value>\n\n• token-name是供语法分析步骤使用的抽象符号\n\n• attribute-value指向相应的符号表条目或具体的值，供语义分析/代\n码生成步骤使用\n\n➢ 类比例子：我爱喝可乐 符合词法吗？\n\n➢ 例子\n\n• 输入：position = initial + rate * 60\n\n• 输出：<id, 1> <=, > <id, 2> <+, > <id, 3> <*, > <number, 60>\n\n词法分析器\n\n语法分析器\n\n语义分析器\n\n中间代码生成器\n\n机器无关代码"
+      },
+      {
+        "chunkId": 2510,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 8,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "\n\n4\n\nØ简化编译器的设计\n\n• 词法分析器可以首先完成一些简单的处理工作\n\nØ模块化设计，增强编译器的可移植性\n\n词法单元、模式、词素\n\n5\n\nØ词法单元 (Token)\n• <词法单元名、属性值>\n• 词法单元名是表示词法单位种类的抽象符号，语法分析器通过单元名即可确\n\n定词法单元序列的结构\n• 属性值通常用于语义分析之后的阶段\n\nØ模式 (Pattern)\n• 描述了一类词法单元的词素可能具有的形式\n\nØ词素 (Lexeme)\n• 源程序中的字符序列\n• 它和某个词法单元的模式匹配，被词法分析器识别为该词法单元的实例\n\n例子\n\n6\n\nØprintf(\"Total = %d\\n\", score)；\n• printf 和 score 与标识符 (id) 的模式匹配\n• \"Total = %d\\n\" 与 literal 的模式匹配\n\n词法单元 非正式描述 词素示例\n\nif 字符i, f if\n\nelse 字符e, l, s, e else\n\ncomparison < 或 > 或 <= 或 >= 或== 或 != <=, !=\n\nid 字母开头的字母/数字串 Pi, socre, D2"
+      },
+      {
+        "chunkId": 2511,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 8,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "if\n\nelse 字符e, l, s, e else\n\ncomparison < 或 > 或 <= 或 >= 或== 或 != <=, !=\n\nid 字母开头的字母/数字串 Pi, socre, D2\n\nnumber 任何数字常量 3.14159, 0, 6.02e23\n\nliteral 在两个”之间，除”以外的任何字符 “core dumped”\n\n词法单元的例子\n\n词法单元的属性\n\n7\n\nØ一个模式匹配多个词素时，必须通过属性来传递附加的信息\n\n• 属性值将被用于语义分析、代码生成等阶段\n\nØ不同的目的需要不同的属性\n\n• 属性值通常是一个结构化数据（包含多种信息）\n\nØ如词法单元 id 的属性\n\n• id 内容、类型、第一次出现的位置、…（或存放于符号表中，属性为\n\n符号表条目链接）\n\n词法错误 - 遇到不符合词法的程序如何处理？.\n\n8\n\nØfi (a == f(x)) ...\n• 没有其他组件的帮助，词法分析器很难发现源代码中的错误\n• fi 是关键词 if 的误写还是一个函数标识符？ à 返回 id 词法单元给语\n\n法分析器处理\n\nØ所有模式都无法和剩余输入的某个前缀匹配\n"
+      },
+      {
+        "chunkId": 2519,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 8,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "-e]等价于a | b | c | d | e\n\nØ 使正则表达式更简洁，但不会使其描述能力增强\n\n正则表达式与词法单元的识别\n\n22\n\nØ 词法分析器要求能够检查输入字符串，在其前缀中找出和某个模式匹配\n\n的词素\n\nØ 首先通过正则定义来描述各种词法单元的模式\n\nØ 定义 ws à (blank | tab | newline)+ 来消除空白\n\n• 当词法分析器识别出这个模式时，不返回词法单元， 继续识别其它模式\n\n例3.8\n\n23\n\n词法分析器的目标\n\n词素 词法单元名字 属性值\nAny ws - -\n\nif if -\n\nthen then -\n\nelse else -\n\nAny id id 指向符号表条目的指针\n\nAny number number 指向符号表条目的指针\n\n< relop LT\n\n<= relop LE\n\n= relop EQ\n\n<> relop NE\n\n> relop GT\n\n>= relop GE\n\nstmt → if expr then stmt\n         I  if expr then stmt else stmt\n         I  ϵ\nex"
+      }
+    ]
+  },
+  {
+    "id": "Q04",
+    "type": "exact_term",
+    "phase": "rerank",
+    "verdict": "pass",
+    "elapsedMs": 10184,
+    "top1Score": 10,
+    "scoreType": "llm_relevance_0_10",
+    "top3Relevant": [
+      true,
+      false,
+      false
+    ],
+    "matchedChecks": 1,
+    "totalChecks": 1,
+    "rawFollowupHit": null,
+    "hits": [
+      {
+        "chunkId": 2518,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 10,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": true,
+        "content": "的例子\n\n20\n\nØ C语言标识符的正则定义\n\n• letter_ à A | B | … | Z | a | b | … | z | _\n\n• digit à 0 | 1 | … | 9\n\n• id à letter_ ( letter_ | digit )*\n\nØ id对应的正则表达式为\n\n• (A | B | … | Z | a | b | … | z | _) ( (A | B | … | Z | a | b | … | z | _) | (0 | 1 | … | 9) )*\n\n正则表达式的扩展\n\n21\n\nØ 基本运算符：选择、连接、Kleene闭包\n\nØ 扩展运算符\n\n• 一个或多个实例：单目后缀 +\n\n• r+ 等价于 rr*\n\n• 零个或一个实例：？\n• r? 等价于ε | r\n\n• 字符类\n\n• [a1a2…an]等价于a1 | a2 | … | an\n\n• 符号，如：[a-e]等价于a | b | c | d | e\n\nØ 使正则表达式更简洁，但不会使其描述能力增强\n\n正则表达式与词法单元的识别\n\n22\n\nØ 词法分析器要求能够检查输入字符串，在其前缀中找出和某个模式"
+      },
+      {
+        "chunkId": 2515,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 4,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "𝐿且t属于𝑀\n\nL的Kleene闭包 𝐿∗ = \t𝑈\"#$\n% 𝐿\"\n\nL的正闭包 𝐿& = \t𝑈\"#'\n% 𝐿\"\n\n语言上的运算的定义\n\n语言还能运算？\n\n串和语言(5) [练习]\n\n15\n\n例子\nL = {A, B, ……, Z, a, b, ……, z}\n\nD = {0, 1, ……, 9}\n\n1. L È D = {A, B, ……, Z, a, b, ……, z, 0, 1, ……, 9}\n2. LD：520个长度为2的串的集合 (字母 + 数字)\n\n3. L4：所有由四个字母构成的串的集合\n\n4. L*：所有字母构成的集合，包括ε\n5. L (L È D)*：？\n\n6. D+：？\n所有以字母开头的，由字母和数位组成的串的集合\n\n由一个或多个数位构成的串的集合\n\n正则表达式\n\n16\n\nØ 假设例子中的第5条 L (L È D)*  当做标识符的集合\n\nØ 可以给出字母、数位集合的名字，再用并、链接、闭包等运算来描述标\n\n识符。\n\nØà 正则表达式！\n\nØ letter (letter | digit)* \n\n正则表达式\n\n17\n\nØ 字母表 Σ 上的正则表达式"
+      },
+      {
+        "chunkId": 2517,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 4,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "定义的语言\n\n正则表达式的例子\n\n18\n\nØ字母表 Σ = {a, b}\n\n• L(a | b) = {a, b}\n\n• L((a | b) (a | b)) = {aa, ab, ba, bb}\n\n• L(a*) = {ε, a, aa, aaa, aaaa, …}\n\n• L((a | b)*) = {ε, a, b, aa, ab, ba, bb, aaa, aab, …}\n\n• L(a | a*b) = {a, b, ab, aab, aaab, …}\n\n正则定义\n\n19\n\nØ为书写方便，可以给正则表达式命名\nØ正则定义是如下形式的定义序列\n• d1 à r1  \n• d2 à r2\n\n• …\n• dn à rn\n\nØ其中\n• di 不在 Σ 中，且各不相同\n• 每个 ri 是字母表 Σ È {d1, d2, …, di-1} 上的正则表达式，这保证了不会出现\n\n递归定义\n\n正则定义的例子\n\n20\n\nØ C语言标识符的正则定义\n\n• letter_ à A | B | … | Z | a | b | … | z | _\n\n• digit à 0 | 1 | … | 9\n\n• id"
+      },
+      {
+        "chunkId": 2536,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 4,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "受 aabb，因为？\n\nØ NFA 接受的语言：从开始状态到达接受状态的所有可能路径的标号串的集合\n\n• 即该 NFA 接受的所有符号串的集合\n\nNFA和相应语言的例子.\n\n44\n\nØ相应的语言：L(aa* | bb*)\n\nɛ\n\nɛ\n\na\n\nb\n\n0\n\n1 2\n\n3 4\n\nstart\n\na\n\nb\n\n从正则表达式到自动机的转换\n\n45\n\nØ正则表达式：简洁、精确地描述词法单元的模式\n\nØ自动机：便于机器执行的计算模型\n\n• NFA：易于从正则表达式转换（ε 跳转）\n\n• DFA：可由 NFA 转换，便于机器高效模拟执行\n\n• DFA 最小化，优化空间使用率\n\n正则表达式 è NFA èDFA\n\n正则表达式到NFA\n\n46\n\nØ基本思想\n\n•根据正则表达式的递归定义，按照正则表达式的结构递归地构造出相\n\n应的 NFA\n\n• 算法分成两个部分\n\n• 基本规则处理 ε 和单符号的情况\n\n• 对于每个正则表达式的运算，建立组合相应NFA的方法\n\n转换算法 (1)\n\n47\n\nØ基本规则部分\n• 表达式 ε\n\n• 表达式 a\n\ni\nstart\n\nf\nɛ\n\ni\nstart\n\nf\na\n\n转换算法 (2)"
+      },
+      {
+        "chunkId": 2537,
+        "documentId": 13,
+        "documentName": "2-词法分析(ch3).pdf",
+        "score": 4,
+        "scoreType": "llm_relevance_0_10",
+        "relevant": false,
+        "content": "个正则表达式的运算，建立组合相应NFA的方法\n\n转换算法 (1)\n\n47\n\nØ基本规则部分\n• 表达式 ε\n\n• 表达式 a\n\ni\nstart\n\nf\nɛ\n\ni\nstart\n\nf\na\n\n转换算法 (2)\n\n48\n\nØ归纳部分\n•选择 s | t\n\n• 连接 st\n\n• 闭包 s* = { ε, s, ss, sss, ssss, … }\n\nN(s): 能够识别正则表达式s的NFA\n\nN(s)\n\nN(t)\n\nɛ\n\nɛ\n\nɛ\n\nɛ\n\ni f\nstart\n\nN(s) N(t)i f\nstart\n\nN(s)\nɛ ɛ\n\ni f\nstart\n\nɛ\n\nɛ\n\n正则表达式到NFA的例子 (1)\n\n49\n\nØ 正则表达式：(a|b)*abb\n\n• 思路？（拆解+合并）\n\nØ 第一个a对应的NFA\n\nØ 第一个b对应的NFA\n\nØ (a|b)的NFA\nstart ɛ\n\nɛ\n\nɛ\n\nɛ\n\na\n\nb\n\n1\n\n2 3\n\n4 5\n\n6\n\n2\nstart\n\n3\na\n\n4\nstart\n\n5\nb\n\n正则表达式到NFA的例子 (2)\n\n50\n\nØ (a|b)*的NFA\n\nØ (a|b)*abb的NFA\n\n不确定性\n\nstar"
+      }
+    ]
+  }
+]

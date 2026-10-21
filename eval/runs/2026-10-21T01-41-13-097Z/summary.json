@@ -1,0 +1,13 @@
+[
+  {
+    "phase": "rerank",
+    "retrievalHit": 2,
+    "retrievalTotal": 2,
+    "isolationPassed": 0,
+    "isolationTotal": 0,
+    "errors": 0,
+    "pendingRefusal": 0,
+    "pendingHistory": 0,
+    "elapsedMs": 14338
+  }
+]
