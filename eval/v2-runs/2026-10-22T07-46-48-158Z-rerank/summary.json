@@ -1,0 +1,75 @@
+{
+  "label": "rerank",
+  "createdAt": "2026-10-22T07:50:46.449Z",
+  "questionSha256": "e17d8bc1c85195340728fc8ef7ef8732cfce054c2efa94e01b3179781917d4ac",
+  "parameters": {
+    "name": "rerank",
+    "size": 500,
+    "overlap": 100,
+    "topK": 10,
+    "rerank": true,
+    "db": "docuagent_eval_20261022073238_rerank",
+    "workdir": "E:\\JavaStudy\\DocuAgent\\data\\eval\\20261022073238_rerank",
+    "indexPath": "E:\\JavaStudy\\DocuAgent\\data\\eval\\20261022073238_rerank\\vector-store.json",
+    "seedUsage": {
+      "calls": 0,
+      "tokens": 0,
+      "missingUsage": 0
+    },
+    "chunkCount": 115,
+    "courses": {
+      "compiler": 1,
+      "empty": 2,
+      "isolation": 900001
+    }
+  },
+  "total": 25,
+  "passed": 19,
+  "retrieval": {
+    "passed": 8,
+    "total": 11
+  },
+  "grounding": {
+    "passed": 6,
+    "total": 11
+  },
+  "tools": {
+    "passed": 5,
+    "total": 6
+  },
+  "refusal": {
+    "passed": 8,
+    "total": 8
+  },
+  "isolation": {
+    "passed": 6,
+    "total": 6
+  },
+  "averageElapsedMs": 8106,
+  "totalUsage": {
+    "chatCalls": 69,
+    "embeddingCalls": 22,
+    "inputTokens": 165282,
+    "outputTokens": 3239,
+    "embeddingTokens": 375,
+    "missingUsageCalls": 0
+  },
+  "probeUsage": {
+    "chatCalls": 11,
+    "embeddingCalls": 11,
+    "inputTokens": 38150,
+    "outputTokens": 551,
+    "embeddingTokens": 224,
+    "missingUsageCalls": 0
+  },
+  "estimatedTotalCost": 0.168896,
+  "estimatedCostPerCase": 0.00675584,
+  "prices": {
+    "currency": "CNY",
+    "chatInputPerMillion": 1,
+    "chatOutputPerMillion": 1,
+    "embeddingPerMillion": 1,
+    "basis": "统一测算情景：三类均按1元/百万token计算；不是硅基流动实时报价或实际账单。实际免费额度可能使扣费为0。供应商未返回用量的调用单独标记，不伪装成零token。"
+  },
+  "averageRequestMs": 6896
+}

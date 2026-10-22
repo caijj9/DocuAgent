@@ -1,0 +1,7 @@
+{
+  "currency": "CNY",
+  "chatInputPerMillion": 1,
+  "chatOutputPerMillion": 1,
+  "embeddingPerMillion": 1,
+  "basis": "统一测算情景：三类均按1元/百万token计算；不是硅基流动实时报价或实际账单。实际免费额度可能使扣费为0。供应商未返回用量的调用单独标记，不伪装成零token。"
+}

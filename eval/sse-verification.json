@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-22T08:09:53.790Z",
+  "courseId": 3,
+  "status": 200,
+  "firstEvent": {
+    "event": "status",
+    "atMs": 63
+  },
+  "firstDeltaMs": 3502,
+  "lastDeltaMs": 4391,
+  "deltaCount": 46,
+  "emissionSpanMs": 889,
+  "completed": true,
+  "answer": "词法分析器读入字符流，组成词素，输出词法单元序列。它还会过滤空白、换行、制表符和注释。[1]",
+  "references": [
+    {
+      "index": 1,
+      "chunkId": 2820,
+      "documentId": 19,
+      "documentName": "演示课件.txt",
+      "snippet": "词法分析基础（公开合成演示资料）\n\n• 词法分析器读入字符流，组成词素，输出词法单元序列。\n• 词法分析器过滤空白、换行、制表符和注释。\n• 词法分析器将词素添加到符号表中。\n• 词法单元包含词法单元名和属性值。\n• 词法单元的属性值用于语义分析和代码生成阶段。\n\n这份资料用于验证上传、带引用问答、出题、提交答案、批改和错题本流程，不替代正式课件。\n\n",
+      "score": 0.03278688524590164
+    }
+  ],
+  "usage": {
+    "id": "3fdd066c-4f46-4da1-a288-3755f5e1774b",
+    "chatCalls": 2,
+    "embeddingCalls": 1,
+    "inputTokens": 763,
+    "outputTokens": 76,
+    "embeddingTokens": 20,
+    "missingUsageCalls": 0,
+    "elapsedMs": 4354
+  },
+  "streamingMode": "先完成资料依据校验，再由服务端逐Unicode字符SSE推送；不是供应商原生token直传。"
+}

@@ -22,6 +22,7 @@ import java.util.*;
 /** 学习业务闭环；昂贵的模型调用在事务外，答题与错题累计在同一事务提交。 */
 @Slf4j @Service
 public class LearningServiceImpl implements LearningService {
+    @Override public QuestionView getQuestion(Long id){return view(requireQuestion(id));}
     private final QuestionMapper questions; private final AnswerRecordMapper answers; private final WrongQuestionMapper wrong;
     private final CourseMapper courses; private final ChunkMapper chunks; private final RetrievalService retrieval;
     private final StudyModel model; private final StudyOutputValidator validator; private final ObjectMapper mapper; private final TransactionTemplate transactions;

@@ -13,6 +13,7 @@ import java.util.List;
 public class LearningController {
     private final LearningService service;
     public LearningController(LearningService service){this.service=service;}
+    @GetMapping("/question/{id}") public Result<QuestionView> question(@PathVariable Long id){return Result.success(service.getQuestion(id));}
     @PostMapping("/question/generate") public Result<List<QuestionView>> generate(@Valid @RequestBody Generate request){return Result.success(service.generate(request));}
     @PostMapping("/answer/submit") public Result<AnswerView> submit(@Valid @RequestBody Submit request){return Result.success(service.submit(request));}
     @GetMapping("/wrong-question") public Result<List<WrongView>> wrong(@RequestParam(required=false) Long courseId,

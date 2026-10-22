@@ -7,5 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface DocumentService {
+    java.util.List<com.docuagent.docuagent.vo.DocumentSummaryVO> list(Long courseId);
     public DocumentUploadVO uploadDocument(Long courseId, MultipartFile file) throws IOException;
 }

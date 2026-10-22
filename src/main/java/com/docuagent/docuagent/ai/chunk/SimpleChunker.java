@@ -44,18 +44,20 @@ public class SimpleChunker {
             return chunks;
         }
         // 保护：overlap >= chunkSize 时 step <= 0，while 会不前进 → 死循环
-        if (overlap >= chunkSize) {
+        if (chunkSize < 1 || overlap < 0 || overlap >= chunkSize) {
             throw new IllegalArgumentException(
                     "overlap(" + overlap + ") 必须小于 chunkSize(" + chunkSize + ")");
         }
 
         int step = chunkSize - overlap;      // 每次窗口前进多少
-        int length = text.length();
+        // 按Unicode码点切分，不能把数学字母等辅助平面字符的代理对切开。
+        int[] codePoints = text.codePoints().toArray();
+        int length = codePoints.length;
         int i = 0;
 
         while (i < length) {
             int end = Math.min(i + chunkSize, length);   // Math.min 防止最后一块越界
-            chunks.add(text.substring(i, end));
+            chunks.add(new String(codePoints, i, end - i));
 
             if (end == length) {
                 break;                            // 已到末尾，别再往前走（否则重复切最后一块）

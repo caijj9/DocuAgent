@@ -13,6 +13,15 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.assertj.core.api.Assertions.*;
 
 class QaAndToolsTest {
+    @Test void aGreetingWithExplicitNoToolInstructionMustNotRequireSavingOrCallingTools(){
+        var sessions=mock(SessionService.class);var chat=mock(ChatModel.class);
+        when(sessions.open(null,1L)).thenReturn(new SessionService.Context(null,1L,List.of(),null));
+        when(chat.call(any(org.springframework.ai.chat.prompt.Prompt.class))).thenReturn(new org.springframework.ai.chat.model.ChatResponse(List.of(new org.springframework.ai.chat.model.Generation(new org.springframework.ai.chat.messages.AssistantMessage("你好！")))));
+        var learning=mock(LearningService.class);var retrieval=mock(RetrievalService.class);
+        var service=new QaServiceImpl(retrieval,mock(StudyModel.class),sessions,learning,new ObjectMapper(),chat);
+        var result=service.agent(new Ask("你好，只需简单打个招呼，不要调用工具，也不要收藏题目。",1L,null));
+        assertThat(result.answer()).isEqualTo("你好！");assertThat(result.toolCalls()).isEmpty();verifyNoInteractions(learning,retrieval);
+    }
     @Test void emptyRetrievalShouldRefuseWithoutCallingChat(){
         RetrievalService retrieval=mock(RetrievalService.class);StudyModel model=mock(StudyModel.class);
         SessionService sessions=mock(SessionService.class);LearningService learning=mock(LearningService.class);

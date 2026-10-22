@@ -14,6 +14,7 @@ import org.springframework.ai.chat.messages.*;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import java.util.*;
 import java.util.regex.*;
 
@@ -23,6 +24,8 @@ public class QaServiceImpl implements QaService {
     private static final String REFUSAL="资料中没有相关内容，无法依据当前课程资料回答。";
     private final RetrievalService retrieval;private final StudyModel model;private final SessionService sessions;
     private final LearningService learning;private final ObjectMapper mapper;private final ChatClient agent;
+    @Value("${docuagent.qa.top-k:10}") private int topK=10;
+    @Value("${docuagent.qa.rerank-enabled:false}") private boolean rerankEnabled=false;
     public QaServiceImpl(RetrievalService retrieval,StudyModel model,SessionService sessions,LearningService learning,ObjectMapper mapper,ChatModel chat){
         this.retrieval=retrieval;this.model=model;this.sessions=sessions;this.learning=learning;this.mapper=mapper;this.agent=ChatClient.create(chat);
     }
@@ -30,7 +33,7 @@ public class QaServiceImpl implements QaService {
         SessionService.Context context=sessions.open(request.sessionId(),request.courseId());
         try{
             String query=rewrite(request.question(),context);
-            List<RetrievalHitVO> hits=retrieval.search(query,context.courseId(),"both",true,false,10);
+            List<RetrievalHitVO> hits=retrieval.search(query,context.courseId(),"both",true,rerankEnabled,topK);
             Qa result;
             if(hits.isEmpty())result=new Qa(REFUSAL,List.of(),query,context.sessionId());
             else{
@@ -135,7 +138,8 @@ public class QaServiceImpl implements QaService {
         SessionService.Context context=sessions.open(request.sessionId(),request.courseId());
         try{
             if(context.courseId()==null)throw new BizException(CodeEnum.TOOL_ACTION_NOT_ALLOWED);
-            boolean save=request.question().matches("(?s).*(收藏|保存|记下|加入错题|记到错题).*?");
+            String requestedActions=actionText(request.question());
+            boolean save=requestedActions.matches("(?s).*(收藏|保存|记下|加入错题|记到错题).*?");
             StudyTools tools=new StudyTools(context.courseId(),save,learning,retrieval,mapper);
             List<Message> history=new ArrayList<>();for(var turn:context.turns()){history.add(new UserMessage(turn.user()));history.add(new AssistantMessage(turn.assistant()));}
             String answer;
@@ -148,7 +152,7 @@ public class QaServiceImpl implements QaService {
                         .call().content();
             }catch(Exception exception){throw new BizException(CodeEnum.MODEL_FAILED);}
             if(answer==null||answer.isBlank())throw new BizException(CodeEnum.MODEL_OUTPUT_INVALID);
-            if(tools.traces().isEmpty()&&(save||request.question().matches("(?s).*(答题记录|上次|错在哪|检索资料|调用.{0,10}工具).*")))
+            if(tools.traces().isEmpty()&&(save||requestedActions.matches("(?s).*(答题记录|上次|错在哪|检索资料|调用.{0,10}工具).*")))
                 throw new BizException(CodeEnum.MODEL_OUTPUT_INVALID);
             // 数字与先后顺序由真实记录组织，避免模型把倒序记录误讲成最后一次答对。
             StringBuilder facts=new StringBuilder();boolean searched=false;
@@ -187,6 +191,9 @@ public class QaServiceImpl implements QaService {
             return new AgentView(answer,context.sessionId(),tools.traces(),references);
         }finally{sessions.close(context);}
     }
+
+    /** 否定要求不授予写入许可，也不能被当作必须调用工具的要求。 */
+    public static String actionText(String question){return question.replaceAll("(?:不要|不必|不用|无需|不需要|不想|不能|禁止|别|勿|没有)[^，。！？；,;\\n]*","");}
 
     private String rewrite(String question,SessionService.Context context){
         if(context.turns().isEmpty())return question;

@@ -6,6 +6,7 @@ import java.util.List;
 
 /** 出题、答题与错题业务；模型结果必须在事务落库之前校验。 */
 public interface LearningService {
+    com.docuagent.docuagent.vo.StudyViews.QuestionView getQuestion(Long id);
     List<QuestionView> generate(Generate request);
     AnswerView submit(Submit request);
     List<WrongView> wrongQuestions(Long courseId,int page,int size);

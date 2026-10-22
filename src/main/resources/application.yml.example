@@ -1,7 +1,9 @@
 server:
-  port: 18081
+  port: ${APP_PORT:18081}
 
 spring:
+  config:
+    import: optional:file:.local/application-secrets.properties
   data:
     redis:
       host: ${REDIS_HOST:127.0.0.1}
@@ -11,9 +13,9 @@ spring:
     name: DocuAgent
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/docuagent?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: ${DB_PASSWORD:change-me}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/docuagent?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
   ai:
     retry:
       max-attempts: 1
@@ -38,9 +40,12 @@ spring:
 
 # ============ 业务配置 ============
 docuagent:
+  qa:
+    top-k: 10
+    rerank-enabled: false
   chunk:
-    size: 500            # 每块的字符数上限
-    overlap: 100         # 相邻块的重叠字符数（必须小于 size）
+    size: 500 # Unicode码点
+    overlap: 0 # 本轮25题实测选择
   vector-store:
     path: data/vector-store.json
   retrieval:

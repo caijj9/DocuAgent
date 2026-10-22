@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class DocumentServiceImpl implements DocumentService {
     private static final Set<String> ALLOWED_EXT =
-            Set.of("pdf", "ppt", "pptx", "doc", "docx");
+            Set.of("pdf", "ppt", "pptx", "doc", "docx", "txt");
     @Autowired
     private DocumentMapper documentMapper;
     @Autowired
@@ -42,6 +42,12 @@ public class DocumentServiceImpl implements DocumentService {
     private SimpleVectorStore vectorStore;
     @Value("${docuagent.vector-store.path:data/vector-store.json}")
     private String storePath;
+
+    @Override public List<com.docuagent.docuagent.vo.DocumentSummaryVO> list(Long courseId){
+        if(courseId==null||courseId<1||courseMapper.selectById(courseId)==null)throw new BizException(CodeEnum.COURSE_NOT_FOUND);
+        return documentMapper.selectList(new LambdaQueryWrapper<Document>().eq(Document::getCourseId,courseId).orderByDesc(Document::getId))
+                .stream().map(d->new com.docuagent.docuagent.vo.DocumentSummaryVO(d.getId(),d.getOriginalName(),d.getStatus(),d.getCharCount())).toList();
+    }
 
     @Override
     public synchronized DocumentUploadVO uploadDocument(Long courseId, MultipartFile file) throws IOException {

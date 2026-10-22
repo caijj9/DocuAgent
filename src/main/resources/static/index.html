@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>DocuAgent · 课程资料学习助手</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="DocuAgent 首页"><span class="brand-mark">D<span>✦</span></span><span>DocuAgent<small>让每个答案，都有出处</small></span></a>
+  <div class="course-block"><label for="courseSelect">当前课程</label><select id="courseSelect" aria-label="当前课程"><option>正在加载课程…</option></select><button id="createCourse" class="subtle">＋ 创建课程</button></div>
+  <nav aria-label="功能导航">
+    <button class="nav active" data-view="chat"><span>◌</span>学习问答</button>
+    <button class="nav" data-view="practice"><span>▤</span>课件练习</button>
+    <button class="nav" data-view="wrong"><span>☆</span>错题与收藏</button>
+    <button class="nav" data-view="materials"><span>▱</span>课程资料 <b id="documentCount">0</b></button>
+  </nav>
+  <div class="sidebar-note"><span class="status-dot"></span>依据当前课程资料回答<p>上传课件，开始一次有依据的学习。</p></div>
+</aside>
+<main>
+  <header class="topbar"><div><span id="courseName">选择一门课程</span><span class="separator">/</span><span id="viewName">学习问答</span></div><span class="local-badge">个人学习空间</span></header>
+  <section id="chatView" class="view active chat-view" aria-label="学习问答">
+    <div class="chat-toolbar"><div class="segmented"><button class="selected" id="qaMode">课件答疑</button><button id="agentMode">学习助手</button></div><button class="subtle" id="newSession">＋ 新对话</button></div>
+    <div id="messages" class="messages" aria-live="polite">
+      <div id="welcome" class="welcome"><div class="welcome-icon">✦</div><span class="eyebrow">YOUR COURSE COMPANION</span><h1>从一个问题，<br>读懂你的课件。</h1><p>答案附上原文引用，知识点可以继续追问。<br>资料没有给出的内容，会明确告诉你。</p><div class="suggestions"><button data-question="词法分析器读入什么、输出什么？">词法分析器的作用 <span>↗</span></button><button data-question="上下文无关文法包含哪四个部分？">理解课件中的概念 <span>↗</span></button></div><button class="text-button" id="welcomeUpload">还没有资料？先上传一份课件 →</button></div>
+    </div>
+    <div class="composer-wrap"><form id="chatForm" class="composer"><label class="sr-only" for="questionInput">输入问题</label><textarea id="questionInput" rows="2" maxlength="1000" placeholder="问问当前课程的知识点，也可以继续追问…"></textarea><div class="composer-actions"><span id="composerHint">回答核对依据后，将逐字显示</span><button type="button" id="cancelAnswer" class="subtle" hidden>停止</button><button type="submit" id="sendButton" class="primary">发送 <span>↑</span></button></div></form><p class="composer-note">自动生成的解释和题目，请结合原课件核对。</p></div>
+  </section>
+  <section id="practiceView" class="view content-view" aria-label="课件练习"><div class="page-heading"><span class="eyebrow">PRACTICE WITH YOUR NOTES</span><h1>把理解，变成掌握。</h1><p>根据当前课程资料出题，提交后查看得分和遗漏要点。</p></div><form id="generateForm" class="panel generate-form"><div><label for="topicInput">练习知识点</label><input id="topicInput" maxlength="200" placeholder="例如：词法分析器的作用"></div><div><label for="questionType">题型</label><select id="questionType"><option value="mixed">混合练习</option><option value="single_choice">判断式单选</option><option value="short_answer">简答题</option></select></div><div><label for="questionCount">数量</label><input id="questionCount" type="number" min="1" max="10" value="3"></div><button id="generateButton" class="primary">生成练习</button><p id="generateStatus" class="form-status" role="status"></p></form><div id="questionList" class="question-list"><div class="empty-state">还没有练习题。选一个知识点，开始检验自己的理解。</div></div></section>
+  <section id="wrongView" class="view content-view" aria-label="错题与收藏"><div class="page-heading"><span class="eyebrow">LEARN FROM EVERY ATTEMPT</span><h1>把薄弱点，留给下次进步。</h1><p>答错会自动记录；手动收藏不会增加答错次数。</p></div><div class="section-actions"><span id="wrongSummary">当前课程</span><button class="secondary" id="refreshWrong">刷新记录</button></div><div id="wrongList" class="question-list"></div></section>
+  <section id="materialsView" class="view content-view" aria-label="课程资料"><div class="page-heading"><span class="eyebrow">YOUR KNOWLEDGE STARTS HERE</span><h1>资料在这里，答案有来处。</h1><p>每门课程单独管理资料，提问时只使用当前课程的内容。</p></div><form id="uploadForm" class="upload-area"><div class="upload-symbol">↥</div><h2>添加一份课程资料</h2><p>支持 PDF、Word、PPT 和 TXT，单文件不超过 50 MB。</p><label class="file-picker" for="uploadFile">选择课件<input id="uploadFile" name="file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt" required></label><span id="chosenFile">尚未选择文件</span><button class="primary" id="uploadButton">上传并处理</button><p id="uploadStatus" class="form-status" role="status"></p></form><div class="section-actions"><h2>已添加的资料</h2><button class="subtle" id="refreshDocuments">刷新</button></div><div id="documentList" class="document-list"></div></section>
+</main>
+<dialog id="courseDialog"><form id="courseForm"><span class="eyebrow">A NEW SUBJECT</span><h2>创建课程</h2><label for="newCourseName">课程名称</label><input id="newCourseName" maxlength="100" required placeholder="例如：编译原理"><label for="newCourseDescription">课程介绍（可选）</label><textarea id="newCourseDescription" maxlength="500" rows="3" placeholder="这门课主要学习什么？"></textarea><div class="dialog-actions"><button type="button" class="secondary" id="closeCourseDialog">取消</button><button class="primary">创建</button></div></form></dialog>
+<div id="toast" class="toast" role="alert" hidden></div>
+</body></html>
