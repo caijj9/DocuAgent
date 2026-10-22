@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-22T08:27:17.122Z",
+  "sourceCommit": "7718f0687cb82ba0431d9728dfbf05d72f786f10",
+  "cloneDirectory": "E:\\JavaStudy\\DocuAgent\\data\\delivery-check\\20261022082636\\DocuAgent",
+  "database": "docuagent_delivery_20261022082636",
+  "startupScript": "start.bat",
+  "preexistingPrivateConfig": false,
+  "preexistingJar": false,
+  "preexistingIndex": false,
+  "initialCourseCount": 0,
+  "pageServed": true,
+  "firstBuildSucceeded": true,
+  "uploaded": {
+    "id": 1,
+    "originalName": "演示课件.txt",
+    "charCount": 186,
+    "status": "DONE",
+    "preview": "词法分析基础（公开合成演示资料）\r\n\r\n• 词法分析器读入字符流，组成词素，输出词法单元序列。\r\n• 词法分析器过滤空白、换行、制表符和注释。\r\n• 词法分析器将词素添加到符号表中。\r\n• 词法单元包含词法单元名和属性值。\r\n• 词法单元的属性值用于语义分析和代码生成阶段。\r\n\r\n这份资料用于验证上传、带引用问答、出题、提交答案、批改和错题本流程，不替代正式课件。\r\n\n"
+  },
+  "qa": {
+    "answer": "词法分析器读入字符流，组成词素，输出词法单元序列。[1]",
+    "references": [
+      {
+        "index": 1,
+        "chunkId": 1,
+        "documentId": 1,
+        "documentName": "演示课件.txt",
+        "snippet": "词法分析基础（公开合成演示资料）\r\n\r\n• 词法分析器读入字符流，组成词素，输出词法单元序列。\r\n• 词法分析器过滤空白、换行、制表符和注释。\r\n• 词法分析器将词素添加到符号表中。\r\n• 词法单元包含词法单元名和属性值。\r\n• 词法单元的属性值用于语义分析和代码生成阶段。\r\n\r\n这份资料用于验证上传、带引用问答、出题、提交答案、批改和错题本流程，不替代正式课件。\r\n\n",
+        "score": 0.03278688524590164
+      }
+    ],
+    "rewrittenQuestion": "词法分析器读入什么、输出什么？",
+    "sessionId": null
+  },
+  "passed": true
+}
