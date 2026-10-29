@@ -17,20 +17,30 @@ import java.util.*;
 public class RedisSessionService implements SessionService {
     private static final String REGISTRY="docuagent:sessions";
     private static final Duration TTL=Duration.ofDays(7);
-    private final StringRedisTemplate redis; private final ObjectMapper mapper; private final CourseMapper courses;
-    public RedisSessionService(StringRedisTemplate redis,ObjectMapper mapper,CourseMapper courses){this.redis=redis;this.mapper=mapper;this.courses=courses;}
+    private final StringRedisTemplate redis;
+    private final ObjectMapper mapper;
+    private final CourseMapper courses;
+    public RedisSessionService(StringRedisTemplate redis,ObjectMapper mapper,CourseMapper courses){
+        this.redis=redis;
+        this.mapper=mapper;
+        this.courses=courses;
+    }
     private String key(String id){
-        if(id==null||!id.matches("[0-9a-fA-F-]{36}"))throw new BizException(CodeEnum.SESSION_NOT_FOUND);
+        if(id==null||!id.matches("[0-9a-fA-F-]{36}"))
+            throw new BizException(CodeEnum.SESSION_NOT_FOUND);
         return "docuagent:session:"+id;
     }
     @Override public SessionView create(Long courseId){
-        if(courseId!=null&&courses.selectById(courseId)==null)throw new BizException(CodeEnum.COURSE_NOT_FOUND);
+        if(courseId!=null&&courses.selectById(courseId)==null)
+            throw new BizException(CodeEnum.COURSE_NOT_FOUND);
         String id=UUID.randomUUID().toString(),created=Instant.now().toString();
         try{
             redis.opsForHash().putAll(key(id),Map.of("courseId",courseId==null?"0":courseId.toString(),"createdAt",created));
             redis.expire(key(id),TTL);redis.opsForZSet().add(REGISTRY,id,System.currentTimeMillis());
             return new SessionView(id,courseId,created);
-        }catch(Exception exception){throw new BizException(CodeEnum.SESSION_STORE_UNAVAILABLE);}
+        }catch(Exception exception){
+            throw new BizException(CodeEnum.SESSION_STORE_UNAVAILABLE);
+        }
     }
     @Override public List<SessionView> list(){
         try{
@@ -44,22 +54,38 @@ public class RedisSessionService implements SessionService {
         }catch(Exception exception){throw new BizException(CodeEnum.SESSION_STORE_UNAVAILABLE);}
     }
     @Override public Context open(String id,Long requestedCourse){
-        if(id==null){if(requestedCourse!=null&&courses.selectById(requestedCourse)==null)throw new BizException(CodeEnum.COURSE_NOT_FOUND);
+        if(id==null){
+            if(requestedCourse!=null&&courses.selectById(requestedCourse)==null)
+                throw new BizException(CodeEnum.COURSE_NOT_FOUND);
             return new Context(null,requestedCourse,List.of(),null);}
         String base=key(id),token=UUID.randomUUID().toString();
         try{
-            if(!Boolean.TRUE.equals(redis.hasKey(base)))throw new BizException(CodeEnum.SESSION_NOT_FOUND);
-            if(!Boolean.TRUE.equals(redis.opsForValue().setIfAbsent(base+":lock",token,Duration.ofMinutes(10))))throw new BizException(CodeEnum.SESSION_BUSY);
+            if(!Boolean.TRUE.equals(redis.hasKey(base)))
+                throw new BizException(CodeEnum.SESSION_NOT_FOUND);
+            if(!Boolean.TRUE.equals(redis.opsForValue().setIfAbsent(base+":lock",token,Duration.ofMinutes(10))))
+                throw new BizException(CodeEnum.SESSION_BUSY);
             Map<Object,Object> data=redis.opsForHash().entries(base);
-            if(data.isEmpty())throw new BizException(CodeEnum.SESSION_NOT_FOUND);
-            long course=Long.parseLong(data.get("courseId").toString());Long scope=course==0?null:course;
-            if(requestedCourse!=null&&!requestedCourse.equals(scope))throw new BizException(CodeEnum.SESSION_COURSE_MISMATCH);
-            if(scope!=null&&courses.selectById(scope)==null)throw new BizException(CodeEnum.COURSE_NOT_FOUND);
+            if(data.isEmpty())
+                throw new BizException(CodeEnum.SESSION_NOT_FOUND);
+            long course=Long.parseLong(data.get("courseId").toString());
+            Long scope=course==0?null:course;
+            if(requestedCourse!=null&&!requestedCourse.equals(scope))
+                throw new BizException(CodeEnum.SESSION_COURSE_MISMATCH);
+            if(scope!=null&&courses.selectById(scope)==null)
+                throw new BizException(CodeEnum.COURSE_NOT_FOUND);
             List<Turn> turns=new ArrayList<>();List<String> values=redis.opsForList().range(base+":history",0,-1);
-            if(values!=null)for(String value:values)turns.add(mapper.readValue(value,Turn.class));
+            if(values!=null)
+                for(String value:values)
+                    turns.add(mapper.readValue(value,Turn.class));
             return new Context(id,scope,turns,token);
-        }catch(BizException exception){release(base,token);throw exception;}
-        catch(Exception exception){release(base,token);throw new BizException(CodeEnum.SESSION_STORE_UNAVAILABLE);}
+        }catch(BizException exception){
+            release(base,token);
+            throw exception;
+        }
+        catch(Exception exception){
+            release(base,token);
+            throw new BizException(CodeEnum.SESSION_STORE_UNAVAILABLE);
+        }
     }
     @Override public void complete(Context context,String user,String assistant){
         if(context.sessionId()==null)return;
